@@ -2,9 +2,10 @@ package main
 
 import (
 	"fmt"
-	pd "github.com/ychensha/dtmdriver-polaris"
-	"github.com/yedf/dtmdriver"
 	"time"
+
+	"github.com/dtm-labs/dtmdriver"
+	pd "github.com/ychensha/dtmdriver-polaris"
 )
 
 func main() {

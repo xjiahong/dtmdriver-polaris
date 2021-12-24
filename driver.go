@@ -11,10 +11,10 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/dtm-labs/dtmdriver"
 	gp "github.com/polarismesh/grpc-go-polaris"
 	"github.com/polarismesh/polaris-go/api"
 	"github.com/polarismesh/polaris-go/pkg/model"
-	"github.com/yedf/dtmdriver"
 )
 
 const (
