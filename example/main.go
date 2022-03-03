@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/dtm-labs/dtmdriver"
-	pd "github.com/ychensha/dtmdriver-polaris"
+	pd "github.com/dtm-labs/dtmdriver-polaris"
 )
 
 func main() {

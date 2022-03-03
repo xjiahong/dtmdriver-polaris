@@ -4,6 +4,10 @@ import (
 	"testing"
 )
 
+func TestMarshalGrpcOption(t *testing.T) {
+
+}
+
 func Test_polarisDriver_ParseServerMethod(t *testing.T) {
 	type args struct {
 		uri string
@@ -24,7 +28,7 @@ func Test_polarisDriver_ParseServerMethod(t *testing.T) {
 		{
 			name:       "polaris",
 			args:       args{uri: "polaris://service/package.service/method?namespace=Test"},
-			wantServer: "polaris:///service?namespace=Test",
+			wantServer: "polaris://service/?options=eyJOYW1lc3BhY2UiOiJUZXN0In0=",
 			wantMethod: "/package.service/method",
 		},
 	}
