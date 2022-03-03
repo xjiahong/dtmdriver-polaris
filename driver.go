@@ -1,6 +1,8 @@
 package driver
 
 import (
+	"encoding/base64"
+	"encoding/json"
 	"fmt"
 	"net"
 	"net/url"
@@ -12,9 +14,10 @@ import (
 	"time"
 
 	"github.com/dtm-labs/dtmdriver"
-	gp "github.com/polarismesh/grpc-go-polaris"
 	"github.com/polarismesh/polaris-go/api"
 	"github.com/polarismesh/polaris-go/pkg/model"
+
+	_ "github.com/polarismesh/grpc-go-polaris"
 )
 
 const (
@@ -29,23 +32,17 @@ var (
 
 type (
 	polarisDriver struct{}
+	dialOptions   struct {
+		Namespace string `json:"Namespace"`
+	}
 )
 
 func (p *polarisDriver) GetName() string {
 	return Name
 }
 
-func (p *polarisDriver) RegisterGrpcResolver() {
-	var err error
-	// 禁用北极星sdk的日志
-	api.SetLoggersLevel(api.NoneLog)
-	// 创建主调端consumer
-	consumer, err = api.NewConsumerAPIByConfig(api.NewConfiguration())
-	if err != nil {
-		panic(err)
-	}
-	gp.Init(gp.Conf{PolarisConsumer: consumer})
-}
+// RegisterGrpcResolver grpc-go-polaris的init已完成注册
+func (p *polarisDriver) RegisterGrpcResolver() {}
 
 func firstIp() net.IP {
 	ias, _ := net.InterfaceAddrs()
@@ -166,6 +163,8 @@ func (p *polarisDriver) RegisterGrpcService(target, token string) error {
 	return nil
 }
 
+// ParseServerMethod 面向github.com/polarismesh/grpc-go-polaris解析
+// uri polaris://service/package.service/method?namespace=Test
 func (p *polarisDriver) ParseServerMethod(uri string) (server string, method string, err error) {
 	if !strings.Contains(uri, "//") { // 处理无scheme的情况，如果您没有直连，可以不处理
 		sep := strings.IndexByte(uri, '/')
@@ -175,18 +174,16 @@ func (p *polarisDriver) ParseServerMethod(uri string) (server string, method str
 		return uri[:sep], uri[sep:], nil
 
 	}
-	// github.com/polarismesh/grpc-go-polaris/polaris_resolver.go
-	// 参考polaris V2做了扩展，authority为polaris服务名
 	u, err := url.Parse(uri)
 	if err != nil {
 		return "", "", fmt.Errorf("parse url failed, err: %w", err)
 	}
+	opts := &dialOptions{}
+	opts.Namespace = u.Query().Get("namespace")
+	jsonStr, _ := json.Marshal(opts)
 
+	server = u.Scheme + "://" + u.Host + "/?options=" + base64.URLEncoding.EncodeToString(jsonStr)
 	method = u.Path
-	server = u.Scheme + ":///" + u.Host
-	if u.RawQuery != "" {
-		server += "?" + u.RawQuery
-	}
 	return
 }
 
