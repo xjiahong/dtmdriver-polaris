@@ -3,7 +3,7 @@ module github.com/xjiahong/dtmdriver-polaris
 go 1.18
 
 require (
-	github.com/dtm-labs/dtmdriver v0.0.1
+	github.com/dtm-labs/dtmdriver v0.0.6
 	github.com/polarismesh/grpc-go-polaris v1.13.1
 	github.com/polarismesh/polaris-go v1.5.2
 )
@@ -12,6 +12,7 @@ require (
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/cespare/xxhash/v2 v2.2.0 // indirect
 	github.com/dlclark/regexp2 v1.10.0 // indirect
+	github.com/go-resty/resty/v2 v2.7.0 // indirect
 	github.com/golang/protobuf v1.5.3 // indirect
 	github.com/google/uuid v1.3.0 // indirect
 	github.com/hashicorp/errwrap v1.1.0 // indirect
