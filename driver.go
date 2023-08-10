@@ -60,15 +60,16 @@ func (p *polarisDriver) RegisterGrpcService(target, token string) error {
 	var err error
 	// 主要考虑是dtmsvr的初始化，如果使用其他driver，polaris的consumer和provider不都应该初始化
 	if provider == nil {
-		provider, err = api.NewProviderAPI()
+		config := GetPolarisConfiguration(GetPolarisConf())
+		provider, err = api.NewProviderAPIByConfig(config)
+		if err != nil {
+			return err
+		}
 	}
-	if err != nil {
-		return err
-	}
-	// token为空不注册，用于托管服务的场景
-	if token == "" {
-		return nil
-	}
+	//// token为空不注册，用于托管服务的场景
+	//if token == "" {
+	//	return nil
+	//}
 	u, err := url.Parse(target)
 	if err != nil {
 		return err
